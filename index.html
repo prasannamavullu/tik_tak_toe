@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Tic Tac Toe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: rgb(85, 142, 139);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            height: 70vh;
+            display: none;
+            position: relative;
+            left: 100px;
+        }
+
+        .Game {
+            height: 60vmin;
+            width: 60vmin;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .box {
+            height: 18vmin;
+            width: 18vmin;
+            border-radius: 25px;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            font-size: 8vmin;
+            color: #064796;
+            background-color: rgb(92, 97, 87);
+        }
+
+        .box.winning {
+            background-color: rgb(87, 122, 87);
+        }
+
+        #newbtn {
+            padding: 1rem;
+            font-size: 1.25rem;
+            background-color: #ff6347;
+            color: white;
+            border-radius: 1.25rem;
+            border: none;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+
+        .msg-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 2rem;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.85);
+            padding: 2rem;
+            border-radius: 1rem;
+            color: white;
+            display: none;
+            z-index: 10;
+        }
+
+        #startbtn {
+            padding: 2rem;
+            font-size: 2rem;
+            background-color: #191913;
+            color: #c18888;
+            border-radius: 2rem;
+            border: none;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+
+        .options {
+            display: none;
+            flex-direction: row;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .option-btn {
+            padding: 1.5rem;
+            font-size: 1.5rem;
+            background-color: #064796;
+            color: white;
+            border: none;
+            border-radius: 1.5rem;
+            cursor: pointer;
+        }
+
+        .back-btn {
+            position: absolute;
+            bottom: 1rem;
+            left: 38%;
+            transform: translateX(-50%);
+            padding: 0.75rem 2rem;
+            font-size: 1.5rem;
+            background-color: #064796;
+            color: white;
+            border-radius: 1.5rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .turn-indicator {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            left: 50px;
+        }
+
+        .player-button {
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            background-color: #064796;
+            color: white;
+            border: none;
+            border-radius: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .player-button:hover {
+            background-color: #032d5d;
+        }
+
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
+            .Game {
+                height: 50vmin;
+                width: 50vmin;
+            }
+
+            .box {
+                height: 15vmin;
+                width: 15vmin;
+                font-size: 6vmin;
+            }
+
+            .msg-container {
+                width: 80%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .Game {
+                height: 40vmin;
+                width: 40vmin;
+            }
+
+            .box {
+                height: 12vmin;
+                width: 12vmin;
+                font-size: 5vmin;
+            }
+
+            .msg-container {
+                width: 90%;
+                padding: 1rem;
+            }
+
+            #startbtn {
+                padding: 1.5rem;
+                font-size: 1.5rem;
+                border-radius: 1.5rem;
+            }
+
+            .option-btn {
+                padding: 1rem;
+                font-size: 1.25rem;
+                border-radius: 1.25rem;
+            }
+
+            .back-btn {
+                bottom: 0.5rem;
+                padding: 0.5rem;
+                font-size: 0.75rem;
+                border-radius: 0.75rem;
+            }
+
+            .player-button {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+                border-radius: 1rem;
+            }
+        }
+
+        .cur{
+            font-size: 30px;
+        }
+
+        .ff{
+            font-size: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="msg-container">
+        <p class="msg">Winner</p>
+        <button id="newbtn">New Game</button>
+    </div>
+    <h1 class="ff">TIC TAC TOE</h1>
+    <button id="startbtn">Start Game</button>
+    <div class="options">
+        <button class="option-btn" id="pvp">Player vs Player</button>
+        <button class="option-btn" id="pvc">Player vs AI</button>
+    </div>
+    <div class="container">
+        <div class="Game">
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+        </div>
+        <div class="turn-indicator">
+            <p class="cur">Current Player</p>
+            <button class="player-button" id="current-player">Player X</button>
+        </div>
+        <button class="back-btn" id="backbtn">Back</button>
+    </div>
+
+    <script>
+        let boxes = document.querySelectorAll(".box");
+        let newGameButton = document.querySelector("#newbtn");
+        let startButton = document.querySelector("#startbtn");
+        let pvpButton = document.querySelector("#pvp");
+        let pvcButton = document.querySelector("#pvc");
+        let options = document.querySelector(".options");
+        let msgContainer = document.querySelector(".msg-container");
+        let msg = document.querySelector(".msg");
+        let playerSymbol = "X"; // Player starts with X
+        let aiSymbol = "O"; // AI plays with O
+        let currentPlayer = playerSymbol; // Track current player
+        let aiEnabled = false;
+        let backButton = document.querySelector("#backbtn");
+
+        const winPatterns = [
+            [0, 1, 2],
+            [0, 3, 6],
+            [0, 4, 8],
+            [1, 4, 7],
+            [2, 5, 8],
+            [2, 4, 6],
+            [3, 4, 5],
+            [6, 7, 8],
+        ];
+
+        const resetGame = () => {
+            currentPlayer = playerSymbol; // Reset player to X
+            enableBoxes();
+            msgContainer.style.display = "none";
+            removeWinningClass();
+            document.querySelector(".container").style.display = "none";
+            options.style.display = "none";
+            startButton.style.display = "inline-block";
+            document.getElementById("current-player").textContent = "Player X"; // Reset current player text
+        };
+
+        startButton.addEventListener("click", () => {
+            options.style.display = "flex";
+            startButton.style.display = "none";
+        });
+
+        pvpButton.addEventListener("click", () => {
+            aiEnabled = false;
+            startGame();
+        });
+
+        pvcButton.addEventListener("click", () => {
+            aiEnabled = true;
+            startGame();
+        });
+
+        const startGame = () => {
+            document.querySelector(".container").style.display = "flex";
+            options.style.display = "none";
+            currentPlayer = playerSymbol; // Set initial player to X
+            updateTurnIndicator(); // Update the turn indicator
+        };
+
+        boxes.forEach((box) => {
+            box.addEventListener("click", () => {
+                if (!box.innerText && (!aiEnabled || currentPlayer === playerSymbol)) {
+                    box.innerText = currentPlayer;
+                    box.style.backgroundColor = currentPlayer === playerSymbol ? "pink" : "rgb(180, 202, 139)";
+                    checkWinner();
+
+                    // Toggle player turns
+                    currentPlayer = currentPlayer === playerSymbol ? aiSymbol : playerSymbol;
+                    if (aiEnabled && currentPlayer === aiSymbol) {
+                        setTimeout(aiMove, 1000); // AI moves after 1 second
+                    }
+                    updateTurnIndicator();
+                }
+            });
+        });
+
+        const aiMove = () => {
+            let available = Array.from(boxes).filter(box => !box.innerText);
+            if (available.length > 0) {
+                let choice = available[Math.floor(Math.random() * available.length)];
+                choice.innerText = aiSymbol;
+                choice.style.backgroundColor = "rgb(180, 202, 139)";
+                currentPlayer = playerSymbol; // Switch to player's turn
+                checkWinner();
+                updateTurnIndicator();
+            }
+        };
+
+        const showWinner = (winner, pattern) => {
+            disableBoxes();
+            highlightWinningPattern(pattern);
+            setTimeout(() => {
+                msg.textContent = `Congratulations! The winner is ${winner}`;
+                msgContainer.style.display = "flex";
+            }, 500);
+        };
+
+        const highlightWinningPattern = (pattern) => {
+            for (let index of pattern) {
+                boxes[index].classList.add("winning");
+            }
+        };
+
+        const removeWinningClass = () => {
+            boxes.forEach((box) => {
+                box.classList.remove("winning");
+            });
+        };
+
+        const disableBoxes = () => {
+            boxes.forEach((box) => {
+                box.disabled = true;
+            });
+        };
+
+        const enableBoxes = () => {
+            boxes.forEach((box) => {
+                box.disabled = false;
+                box.innerText = "";
+                box.style.backgroundColor = ""; // Reset background color
+            });
+        };
+
+        const checkWinner = () => {
+            for (let pattern of winPatterns) {
+                let p1val = boxes[pattern[0]].innerText;
+                let p2val = boxes[pattern[1]].innerText;
+                let p3val = boxes[pattern[2]].innerText;
+
+                if (p1val && p1val === p2val && p2val === p3val) {
+                    showWinner(p1val, pattern);
+                    return;
+                }
+            }
+
+            if (Array.from(boxes).every(box => box.innerText)) {
+                setTimeout(() => {
+                    msg.textContent = "It's a draw!";
+                    msgContainer.style.display = "flex";
+                }, 500);
+            }
+        };
+
+        const updateTurnIndicator = () => {
+            document.getElementById("current-player").textContent = currentPlayer === playerSymbol ? "Player X" : "Player O";
+        };
+
+        newGameButton.addEventListener("click", resetGame);
+
+        // Event listener for back button
+        backButton.addEventListener("click", () => {
+            resetGame(); // Reset the game state
+            document.querySelector(".container").style.display = "none"; // Hide game container
+            startButton.style.display = "inline-block"; // Show start button
+        });
+    </script>
+</body>
+</html>
+
+
